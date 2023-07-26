@@ -18,4 +18,10 @@ app.config["SECRET_KEY"] = secret_key_hash
 db.init_app(app)
 login_manager.init_app(app)
 
+
+
 from .models import user_model, notes_model
+
+@login_manager.user_loader
+def load_user(user_id):
+    return user_model.User.query.get(int(user_id))

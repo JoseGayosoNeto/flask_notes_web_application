@@ -13,13 +13,15 @@ class Note(db.Model):
 
     __tablename__="notes"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
+    note_name = db.Column(db.String(50), unique=True, nullable=False)
     data = db.Column(db.String(10000), nullable=False)
     date_created = db.Column(db.DateTime(timezone=True), default = get_formatted_time, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     usuario = db.relationship("User", back_populates="notes", lazy="dinamic")
 
-    def __init__(self, data, user_id):
+    def __init__(self, note_name,  data, user_id):
+        self.note_name = note_name
         self.data = data
         self.user_id = user_id
 
