@@ -22,6 +22,12 @@ login_manager.init_app(app)
 
 from .models import user_model, notes_model
 
+from .views.user_views import auth as auth_blueprint
+app.register_blueprint(auth_blueprint)
+
+from .views.notes_views import main as main_blueprint
+app.register_blueprint(main_blueprint)
+
 @login_manager.user_loader
 def load_user(user_id):
     return user_model.User.query.get(int(user_id))

@@ -1,6 +1,6 @@
 from APP import db
 from flask_login import login_required, current_user
-from Flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from ..models import notes_model
 
 main = Blueprint("main", __name__)
