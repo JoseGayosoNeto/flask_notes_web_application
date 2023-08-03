@@ -9,6 +9,11 @@ main = Blueprint("main", __name__)
 def home():
     pass
 
+@main.route('/profile')
+@login_required
+def dashboard():
+    pass
+
 @main.route('/profile', methods=["POST"])
 @login_required
 def add_note():
