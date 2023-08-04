@@ -1,14 +1,14 @@
 from APP import db, bcrypt
 from flask_login import UserMixin
-from sqlalchemy.sql import func
+from datetime import datetime
 
 class User(db.Model, UserMixin):
 
     def get_formatted_time():
 
-        current_time = func.now()
+        current_time = datetime.now()
 
-        formatted_time = current_time.strftime("%H:%M:%S")
+        formatted_time = current_time.replace(microsecond=0)
 
         return formatted_time
 
@@ -20,16 +20,9 @@ class User(db.Model, UserMixin):
     full_name = db.Column(db.String(500), nullable=False)
     date_created = db.Column(db.DateTime(timezone=True), default = get_formatted_time, nullable=False)
 
-    notes = db.relationship("Note", back_populates="usuario", lazy="dinamic")
+    notes = db.relationship("Note", back_populates="usuario", lazy="dynamic")
 
-    def __init__(self, email, password, full_name):
+    def __init__(self, email, full_name, password):
         self.email = email
-        self.password = password
         self.full_name = full_name
-
-    
-    def generate_encrypted_password(self):
-        self.password = bcrypt.generate_password_hash(self.password)
-    
-    def check_password(self, password):
-        return bcrypt.check_password_hash(self.password, password)
+        self.password = password
