@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="title text-center text-dark">Sign Up</h1>
+<br>
+<div class="card mx-auto" style="width: 25rem;">
+    <div class="card-body">
+        {%- for message in get_flashed_messages(with_categories=true) %}
+            {%- if message[0] == 'success' %}
+                <div class="alert alert-success">
+                    {{message[1]}}
+                </div>
+            {%- elif message[0] == 'error_user_already_exists' %}
+                <div class="alert alert-danger">
+                    {{message[1]}}
+                </div>
+            {%- endif %}
+        {%- endfor %}
+        <form action="{{url_for('auth.signup')}}" method="POST">
+            <div class="form-group">
+                <input type="email" name="email" class="form-control"  placeholder="Your Email">
+                <p></p>
+                {%- for message in get_flashed_messages(with_categories=true) %}
+                    {%- if message[0] == 'error_not_email' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- endif %}
+                {%- endfor %}     
+            </div>
+            <p></p>
+            <div class="form-group">
+                <input type="text" name="fullname" class="form-control"  placeholder="Your Full Name">
+                <p></p>
+                {%- for message in get_flashed_messages(with_categories=true) %}
+                    {%- if message[0] == 'error_not_fullname' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- endif %}
+                {%- endfor %}     
+            </div>
+            <p></p>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="Your Password">
+                <p></p>
+                {%- for message in get_flashed_messages(with_categories=true) %}
+                    {%- if message[0] == 'error_not_password' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- elif message[0] == 'error_password_minlength' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- elif message[0] == 'error_password_maxlength' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- elif message[0] == 'success' %}
+                        <div class="alert alert-success">
+                            {{message[1]}}
+                        </div>
+                    {%- endif %}
+                {%- endfor %}     
+            </div>
+            <p></p>
+            <button type="submit" class="btn btn-primary w-100">Sign up</button>
+        </form>
+        </div>
+    </div>
+{% endblock %}
