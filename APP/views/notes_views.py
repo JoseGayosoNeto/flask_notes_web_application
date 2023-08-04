@@ -5,14 +5,11 @@ from ..models import notes_model
 
 main = Blueprint("main", __name__)
 
-@main.route('/')
-def home():
-    pass
 
 @main.route('/profile')
 @login_required
-def dashboard():
-    pass
+def profile():
+    return f"Logged In"
 
 @main.route('/profile', methods=["POST"])
 @login_required
