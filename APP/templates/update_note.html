@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="title text-center text-dark"
+ style="display: flex; flex-direction: column; justify-content: flex-start;">Update Note</h1>
+<hr>
+
+<form action="{{url_for('main.update_note', id=note.id)}}" method="POST">
+    <div class="mb-3 row">
+        <label for="staticNoteName" class="col-sm-2 col-form-label">Current Note Name</label>
+        <div class="col-sm-10">
+          <input type="text" readonly class="form-control-plaintext" id="staticNoteName" value="{{note.note_name}}">
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="inputNewNoteName" class="col-sm-2 col-form-label">New Note Name</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputNewNoteName" name="new_notename">
+        </div>
+        <br><br><br>
+        <div class="col-sm-10">
+            <button class="btn btn-dark" type="submit">Update Note Name</button>
+        </div>
+      </div>
+</form>
+{% endblock %}

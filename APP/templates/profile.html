@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    <h1 class="title text-center text-dark">Your Notes:</h1>
+    <hr>
+    <div class="list-group">
+        {%- for message in get_flashed_messages() %}
+            {%- if message[0] == 'success'%}
+                <div class="alert alert-success">
+                    {{message[1]}}
+                </div>
+            {%- endif %}
+        {%- endfor %}
+        {% for note in notes.items %}
+            <div class="d-flex justify-content-start">
+                <a href="#" class="list-group-item list-group-item-action"  aria-current="true">
+                    {{note.note_name}}
+                </a>
+                <div class="btn-group btn-group-xs ms-2" role="group">
+                    <a href="{{note.id}}/update_note" class="btn btn-secondary" type="button">Update</a>
+                    <a href="{{note.id}}/profile" class="btn btn-danger" type="button"
+                    onclick="return confirm('Do you really wanna delete this note?')">Remove</a>
+                </div>
+            </div>
+            <p></p>
+        {% endfor %}
+    </div>
+    <p></p>
+    {% if notes.has_prev %}
+        <a href="{{url_for('main.profile', page=notes.prev_num)}}" class="btn btn-dark">Previous Notes</a>
+    {% endif %}
+    {% if notes.has_next %}
+        <a href="{{url_for('main.profile', page=notes.next_num)}}" class="btn btn-dark"> Next Notes</a>
+    {% endif %}
+    <br>
+    <div class="container" style="text-align: center;">
+        <p>
+            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewNote" aria-expanded="false">
+              New Note
+            </button>
+          </p>
+          <div class="collapse w-50 mx-auto" id="collapseNewNote">
+            <div class="card card-body">
+                <form action="{{url_for('main.add_note')}}" method="POST">
+                    <div class="container" style="text-align: left;">
+                        <label for="NoteName" class="form-label">Note name:</label>
+                    </div>
+                    <input type="text" name="notename" id="NoteNameInput" class="form-control" placeholder="Your Note Name">
+                    <p></p>
+                    <button type="submit" class="btn btn-dark w-25">Add New Note</button>
+                </form>
+            </div>
+          </div>
+    </div>
+
+{% endblock %}
