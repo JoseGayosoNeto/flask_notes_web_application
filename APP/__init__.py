@@ -20,7 +20,7 @@ login_manager.init_app(app)
 
 
 
-from .models import user_model, notes_model
+from .models import user_model, notes_model, note_content
 
 from .views.user_views import auth as auth_blueprint
 app.register_blueprint(auth_blueprint)
