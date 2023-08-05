@@ -6,7 +6,8 @@
     <title>Pin Your Notes!</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body style="background-color: azure;">
     <ul class="nav justify-content-end" style="background-color: black;">
@@ -19,9 +20,18 @@
           </li>
         {% endif %}
         {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link text-white" href="{{url_for('auth.logout')}}">Logout</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="{{url_for('main.profile')}}">List Your Notes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+            <i class="bi bi-person-circle icon-color"></i>
+          </a>
+          <ul class="dropdown-menu">
+              <li><label class="dropdown-text">Logged as {{current_user.full_name}}</label></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Logout</a></li>
+          </ul>
         {% endif %}
       </ul>
       <div class="container position-absolute top-50 start-50 translate-middle">
