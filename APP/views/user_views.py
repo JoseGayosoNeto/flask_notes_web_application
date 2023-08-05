@@ -64,7 +64,6 @@ def signup_post():
             new_user = user_model.User(email = email, full_name = fullname, password= password_hash)
             db.session.add(new_user)
             db.session.commit()
-            flash(f"User {new_user.full_name} created sucessfully! You can now log in.", "success")
             return redirect(url_for("auth.login"))
 
     return redirect(url_for('auth.signup'))

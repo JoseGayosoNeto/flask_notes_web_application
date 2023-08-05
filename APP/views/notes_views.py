@@ -6,32 +6,50 @@ from ..models import notes_model
 main = Blueprint("main", __name__)
 
 
-@main.route('/profile')
+@main.route('/profile', methods=["GET"])
 @login_required
 def profile():
-    return f"Logged In"
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+    all_notes = notes_model.Note.query.filter_by(user_id=current_user.id).paginate(page=page, per_page=per_page)
+    return render_template("profile.html", notes=all_notes)
 
 @main.route('/profile', methods=["POST"])
 @login_required
 def add_note():
-    pass
+    if request.method == 'POST':
+        note_name = request.form.get('notename')
 
-@main.route('/profile', methods=["POST"])
-@login_required
-def list_notes():
-    pass
+        if not note_name:
+            flash("This field must be filled", "error_not_notename")
+        else:
+            new_note = notes_model.Note(note_name=note_name, user_id=current_user.id)
+            db.session.add(new_note)
+            db.session.commit()
+            flash("The note has been added", "success")
+            return redirect(url_for("main.profile"))
+        
+    return redirect(url_for("main.profile"))
 
-@main.route('/profile/note/<note_name>')
-@login_required
-def list_content_note(note_name):
-    pass
 
-@main.route('/<int:id>/update_note', methods=["POST"])
+@main.route('/<int:id>/update_note', methods=["GET","POST"])
 @login_required
 def update_note(id):
-    pass
+    note = notes_model.Note.query.filter_by(id=id).first()
+    if request.method == "POST":
+        new_note_name = request.form.get('new_notename')
+
+        note = notes_model.Note.query.filter_by(id=id).update({"note_name": new_note_name})
+        db.session.commit()
+        flash("Note Updated.", "success_update")
+        return redirect(url_for("main.profile"))
+    return render_template("update_note.html", note=note)
 
 @main.route('/<int:id>/profile')
 @login_required
 def delete_note(id):
-    pass
+    note = notes_model.Note.query.filter_by(id=id).first()
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(url_for("main.profile"))
+
