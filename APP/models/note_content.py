@@ -14,3 +14,4 @@ class Note_Content(db.Model):
         self.content = content
         self.note_id = note_id
     
+    
