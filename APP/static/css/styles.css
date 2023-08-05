@@ -1,0 +1,30 @@
+.list-group-item{
+    transition: background-color 0.5s ease;
+}
+
+.list-group-item:hover {
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: underline;
+}
+
+.icon-color{
+    color: white;
+}
+
+.dropdown-text{
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.dropdown-toggle::after{
+    color: white;
+}
