@@ -5,7 +5,7 @@
     <h1 class="text-center text-dark">Your Notes:</h1>
     <hr>
     {%- for message in get_flashed_messages(with_categories=true) %}
-        {%- if message[0] == 'success' or 'success_update' or 'success_delete' %}
+        {%- if message[0] == 'success' or message[0] == 'success_update' or message[0] == 'success_delete' %}
             <div class="alert alert-success">
                 {{message[1]}}
             </div>
@@ -48,7 +48,7 @@
                             {{message[1]}}
                         </div>
                     {%- endif %}
-                {% endfor %}
+                {%- endfor %}
                 <form action="{{url_for('main.add_note')}}" method="POST">
                     <div class="container" style="text-align: left;">
                         <label for="NoteName" class="form-label">Note name:</label>
@@ -60,5 +60,16 @@
             </div>
           </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var collapseNewNote = document.getElementById('collapseNewNote');
+            var flashMessages = document.getElementsByClassName('alert-danger');
+    
+            if (flashMessages.length > 0) {
+                collapseNewNote.classList.add('show');
+            }
+        });
+    </script>
 
 {% endblock %}
