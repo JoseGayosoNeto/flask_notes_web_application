@@ -17,9 +17,9 @@ class Note(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default = get_formatted_time, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    usuario = db.relationship("User", back_populates="notes")
+    user = db.relationship("User", back_populates="notes")
 
-    contents = db.relationship("Note_Content", back_populates="note", lazy="dynamic")
+    contents = db.relationship("Note_Content", back_populates="note", lazy="dynamic", cascade="all, delete-orphan")
 
     def __init__(self, note_name, user_id):
         self.note_name = note_name
