@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center text-dark">{{note.note_name}}:</h1>
+        <hr>
+        <ul class="list-group">
+            {% for content in note_contents.items %}
+            <li class="list-group-item">
+                <form action="{{ url_for('content.is_completed_checkbox', content_id=content.id) }}" method="POST" class="form-check">
+                    <div class="form-check">
+                        <input type="checkbox" name="checkbox" class="form-check-input" {% if content.is_completed %} checked {% endif %} id="CheckTaskCompleted{{ content.id }}" onchange="this.form.submit()">
+                        <label class="form-check-label" for="CheckTaskCompleted{{ content.id }}">
+                            {{ content.content }}
+                        </label>
+                    </div>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="row mt-3">
+            <div class="col text-center">
+                {% if note_contents.has_prev %}
+                <a href="{{url_for('content.list_content', page=note_contents.prev_num, id=note.id)}}" class="btn btn-dark">Previous Contents</a>
+                {% endif %}
+            </div>
+            <div class="col text-center">
+                {% if note_contents.has_next %}
+                <a href="{{url_for('content.list_content', page=note_contents.next_num, id=note.id)}}" class="btn btn-dark">Next Contents</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="container mt-3 d-flex justify-content-between">
+            <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewContent" aria-expanded="false">
+                New Content
+            </button>
+            <a class="btn btn-dark" type="button" href="{{url_for('main.profile')}}">Go back to Notes</a>
+        </div>
+        <div class="collapse w-50 mx-auto mt-3" id="collapseNewContent">
+            <div class="card card-body">
+                {%- for message in get_flashed_messages(with_categories=true) %}
+                {%- if message[0] == 'error_not_content' %}
+                <div class="alert alert-danger">
+                    {{message[1]}}
+                </div>
+                {%- endif %}
+                {%- endfor %}
+                <form action="{{ url_for('content.add_note_content', id=note.id) }}" method="POST">
+                    <div class="container" style="text-align: left;">
+                        <label for="Content" class="form-label">Note Content:</label>
+                    </div>
+                    <input type="text" name="content" id="Content" class="form-control" placeholder="Note Task or Content">
+                    <p></p>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-dark w-25">Add New Content</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var collapseNewContent = document.getElementById('collapseNewContent');
+            var flashMessages = document.getElementsByClassName('alert-danger');
+    
+            if (flashMessages.length > 0) {
+                collapseNewContent.classList.add('show');
+            }
+        });
+    </script>
+    
+    
+
+{% endblock %}
