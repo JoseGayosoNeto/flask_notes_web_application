@@ -1,8 +1,8 @@
-.list-group-item{
+.list-group-item-action{
     transition: background-color 0.5s ease;
 }
 
-.list-group-item:hover {
+.list-group-item-action:hover {
     background-color: #007bff;
     color: #fff;
     text-decoration: underline;
@@ -28,3 +28,8 @@
 .dropdown-toggle::after{
     color: white;
 }
+
+.form-check-input:checked ~ .form-check-label{
+    text-decoration: line-through;
+    color: #666666;
+  }
