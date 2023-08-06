@@ -2,24 +2,24 @@
 {% block content %}
 
 
-    <h1 class="title text-center text-dark">Your Notes:</h1>
+    <h1 class="text-center text-dark">Your Notes:</h1>
     <hr>
+    {%- for message in get_flashed_messages(with_categories=true) %}
+        {%- if message[0] == 'success' or 'success_update' or 'success_delete' %}
+            <div class="alert alert-success">
+                {{message[1]}}
+            </div>
+        {%- endif %}
+    {%- endfor %}
     <div class="list-group">
-        {%- for message in get_flashed_messages() %}
-            {%- if message[0] == 'success'%}
-                <div class="alert alert-success">
-                    {{message[1]}}
-                </div>
-            {%- endif %}
-        {%- endfor %}
         {% for note in notes.items %}
             <div class="d-flex justify-content-start">
-                <a href="#" class="list-group-item list-group-item-action"  aria-current="true">
+                <a href="{{url_for('content.list_content', id=note.id)}}" class="list-group-item list-group-item-action"  aria-current="true">
                     {{note.note_name}}
                 </a>
                 <div class="btn-group btn-group-xs ms-2" role="group">
                     <a href="{{note.id}}/update_note" class="btn btn-secondary" type="button">Update</a>
-                    <a href="{{note.id}}/profile" class="btn btn-danger" type="button"
+                    <a href="{{note.id}}/delete" class="btn btn-danger" type="button"
                     onclick="return confirm('Do you really wanna delete this note?')">Remove</a>
                 </div>
             </div>
@@ -42,6 +42,13 @@
           </p>
           <div class="collapse w-50 mx-auto" id="collapseNewNote">
             <div class="card card-body">
+                {%- for message in get_flashed_messages(with_categories=true) %}
+                    {%- if message[0] == 'error_not_notename' %}
+                        <div class="alert alert-danger">
+                            {{message[1]}}
+                        </div>
+                    {%- endif %}
+                {% endfor %}
                 <form action="{{url_for('main.add_note')}}" method="POST">
                     <div class="container" style="text-align: left;">
                         <label for="NoteName" class="form-label">Note name:</label>
