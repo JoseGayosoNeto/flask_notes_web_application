@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="title text-center text-dark"
+ style="display: flex; flex-direction: column; justify-content: flex-start;">Update Note Content</h1>
+<hr>
+
+<form action="{{url_for('content.update_note_content', content_id=content.id)}}" method="POST">
+    <div class="mb-3 row">
+        <label for="staticNoteContent" class="col-sm-2 col-form-label">Current Note Content</label>
+        <div class="col-sm-10">
+          <input type="text" readonly class="form-control-plaintext" id="staticNoteContent" value="{{content.content}}">
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="inputNewNoteContent" class="col-sm-2 col-form-label">New Note Content</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="inputNewNoteName" name="new_notecontent">
+        </div>
+        <br><br><br>
+        <div class="col-sm-10">
+            <button class="btn btn-dark" type="submit">Update Note Content</button>
+        </div>
+      </div>
+</form>
+{% endblock %}
