@@ -29,6 +29,8 @@
               <li><label class="dropdown-text">Logged as {{current_user.full_name}}</label></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{{url_for('auth.logout')}}">Logout</a></li>
+              <li><a class="dropdown-item" href="{{url_for('auth.delete_user', id=current_user.id)}}"
+                 onclick="return confirm('Do you really wanna delete this User Account?')">Delete Account</a></li>
           </ul>
         {% endif %}
       </ul>
