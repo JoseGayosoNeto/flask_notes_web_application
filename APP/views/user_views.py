@@ -1,6 +1,6 @@
 from APP import db
 from flask import Blueprint, flash, redirect, url_for, render_template, request
-from ..models import user_model
+from ..models import user_model, notes_model, note_content_model
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -74,4 +74,17 @@ def signup_post():
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
-    
+
+@auth.route('/delete_user/user/<int:id>')
+@login_required
+def delete_user(id):
+    user = user_model.User.query.filter_by(id=id).first()
+    if user:
+        if user.notes.filter(notes_model.Note.contents.any()).count():
+            for content in user.notes:
+                note_content_model.Note_Content.query.filter_by(note_id=content.id).delete()
+            
+        
+        db.session.delete(user)
+        db.session.commit()
+        return redirect(url_for("auth.login"))
