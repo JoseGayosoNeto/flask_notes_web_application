@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
     full_name = db.Column(db.String(500), nullable=False)
     date_created = db.Column(db.DateTime(timezone=True), default = get_formatted_time, nullable=False)
 
-    notes = db.relationship("Note", back_populates="user", lazy="dynamic")
+    notes = db.relationship("Note", back_populates="user", lazy="dynamic", cascade="all, delete-orphan")
 
     def __init__(self, email, full_name, password):
         self.email = email
