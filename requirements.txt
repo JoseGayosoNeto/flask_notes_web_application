@@ -5,3 +5,5 @@ Bcrypt
 flask_bcrypt
 flask_login
 Bootstrap
+flask_mail
+python-dotenv
