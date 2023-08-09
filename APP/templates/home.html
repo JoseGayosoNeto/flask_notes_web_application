@@ -10,10 +10,12 @@
         <div class="card-title"><h3 class="title text-center text=dark">Login</h3></div>
     </div>
     <div class="card-body">
-      {%- for message in get_flashed_messages() %}
+      {%- for message in get_flashed_messages(with_categories=true) %}
+        {%- if message[0] == 'error_not_confirmed_account' or message[0] == 'error_incorrect_credentials' %}
         <div class="alert alert-danger">
-          {{message}}
+          {{message[1]}}
         </div>
+        {%- endif %}
       {%- endfor %}
         <form action="{{url_for('auth.login_post')}}" method="POST">
             <div class="form-group">
