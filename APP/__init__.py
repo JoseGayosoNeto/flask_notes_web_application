@@ -1,22 +1,33 @@
 from flask import Flask
 from flask_bcrypt import Bcrypt
-import secrets
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_mail import Mail
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy()
 login_manager = LoginManager()
-
-secret_key = secrets.token_hex(16)
-secret_key_hash = bcrypt.generate_password_hash(secret_key)
+mail = Mail()
+load_dotenv()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///db.sqlite3'
-app.config["SECRET_KEY"] = secret_key_hash
+app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
+app.config["MAIL_SERVER"] = 'smtp.office365.com'
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USE_SSL"] = False
+app.config["MAIL_DEFAULT_SENDER"] = 'josegayosoneto@outlook.com.br'
+app.config["MAIL_USERNAME"] = 'josegayosoneto@outlook.com.br'
+app.config["MAIL_PASSWORD"] = os.environ.get('MAIL_PASSWORD')
+
 
 db.init_app(app)
 login_manager.init_app(app)
+mail.init_app(app)
 
 
 
