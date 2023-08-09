@@ -1,8 +1,11 @@
-from APP import db
+from APP import db, mail
 from flask import Blueprint, flash, redirect, url_for, render_template, request
 from ..models import user_model, notes_model, note_content_model
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Message
+from secrets import token_urlsafe
+from datetime import datetime, timedelta
 
 auth = Blueprint("auth", __name__)
 
@@ -19,14 +22,16 @@ def login_post():
         user = user_model.User.query.filter_by(email=email).first()
 
         if not user or not check_password_hash(user.password, password):
-            flash("Incorrect email ou password", 400)
+            flash("Incorrect email ou password", "error_incorrect_credentials")
             return redirect(url_for("auth.login"))
         
-        login_user(user=user)
+        if user.token_confirmed == True:
+            login_user(user=user)
+        else:
+            flash("Account not confirmed!", "error_not_confirmed_account")
+            return redirect(url_for("auth.login"))
 
-        return redirect(url_for("main.profile"))
-
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("main.profile"))
 
 @auth.route('/signup')
 def signup():
@@ -61,13 +66,43 @@ def signup_post():
             flash("Password must be a maximum of 20 characters", "error_password_maxlength")
 
         if not has_user and email and fullname and password and 6 <= len(password) <= 20:
-            new_user = user_model.User(email = email, full_name = fullname, password= password_hash)
+            token = token_urlsafe(16)
+            new_user = user_model.User(email = email, full_name = fullname, password = password_hash, account_token = token)
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for("auth.login"))
+
+            confirm_account_url = url_for('auth.confirm', account_token=token, _external=True)
+            msg = Message('Confirm your account', recipients=[email])
+            msg.html = render_template("confirmation_email.html", confirm_account_url=confirm_account_url)
+            mail.send(msg)
+            flash(f"A confirmation email has been sent to {email}. You can now leave this page.", "confirmation_message")
 
     return redirect(url_for('auth.signup'))
     
+@auth.route('/confirm/<string:account_token>')
+def confirm(account_token):
+    user = user_model.User.query.filter_by(account_token=account_token).first()
+
+    if user:
+        time_limit = timedelta(days=7)
+        if datetime.utcnow() - user.token_generated_at > time_limit:
+            db.session.delete(user)
+            db.session.commit()
+            
+            return "Expired token. Create a new account."
+        else:
+            user = user_model.User.query.filter_by(account_token=account_token).update({"token_confirmed" : True})
+            db.session.commit()
+            user = user_model.User.query.filter_by(account_token=account_token).first()
+            msg = Message('Account confirmed', recipients=[user.email])
+            msg.html = render_template("account_confirmed_message.html", user=user)
+            mail.send(msg)
+            return redirect(url_for('auth.login'))
+    
+    return redirect(url_for("auth.login"))
+
+
+
 
 @auth.route('/logout')
 @login_required
@@ -87,4 +122,4 @@ def delete_user(id):
         
         db.session.delete(user)
         db.session.commit()
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.signup"))
