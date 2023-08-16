@@ -14,7 +14,7 @@ login_manager = LoginManager()
 mail = Mail()
 load_dotenv()
 
-app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///db.sqlite3'
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("SQLALCHEMY_DATABASE_URI")
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 app.config["MAIL_SERVER"] = 'smtp.office365.com'
 app.config["MAIL_PORT"] = 587
